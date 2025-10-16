@@ -11,23 +11,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devsuperior.dsmovie.dto.MovieDTO;
 import com.devsuperior.dsmovie.dto.ScoreDTO;
 import com.devsuperior.dsmovie.services.impl.ScoreServiceImpl;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/scores")
+@RequestMapping(value = "/scores", produces = APPLICATION_JSON_VALUE)
 public class ScoreController {
-	
-	private final ScoreService scoreService;
+
+    private final ScoreService scoreService;
 
     public ScoreController(ScoreServiceImpl scoreService) {
         this.scoreService = scoreService;
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
-	@PutMapping
-	public ResponseEntity<MovieDTO> saveScore(@Valid @RequestBody ScoreDTO dto) {
-		MovieDTO movieDTO = scoreService.saveScore(dto);
-		return ok().body(movieDTO);
-	}
+    @PutMapping(consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<MovieDTO> saveScore(@Valid @RequestBody ScoreDTO dto) {
+        MovieDTO movieDTO = scoreService.saveScore(dto);
+        return ok(movieDTO);
+    }
 }
