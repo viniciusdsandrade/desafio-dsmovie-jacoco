@@ -1,7 +1,8 @@
 package com.devsuperior.dsmovie.controllers.handlers;
 
-import java.time.Instant;
+import java.util.ArrayList;
 
+import com.devsuperior.dsmovie.dto.FieldMessageDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,29 +17,56 @@ import com.devsuperior.dsmovie.services.exceptions.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import static java.time.Instant.now;
+import static org.springframework.http.HttpStatus.*;
+
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<CustomErrorDTO> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        CustomErrorDTO err = new CustomErrorDTO(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+        HttpStatus status = NOT_FOUND;
+        CustomErrorDTO err = new CustomErrorDTO(
+                now(),
+                status.value(),
+                e.getMessage(),
+                request.getRequestURI()
+        );
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<CustomErrorDTO> database(DatabaseException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        CustomErrorDTO err = new CustomErrorDTO(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+        HttpStatus status = BAD_REQUEST;
+        CustomErrorDTO err = new CustomErrorDTO(
+                now(),
+                status.value(),
+                e.getMessage(),
+                request.getRequestURI()
+        );
         return ResponseEntity.status(status).body(err);
     }
-    
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CustomErrorDTO> methodArgumentNotValidation(MethodArgumentNotValidException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-        ValidationErrorDTO err = new ValidationErrorDTO(Instant.now(), status.value(), "Dados inválidos", request.getRequestURI());
+    public ResponseEntity<ValidationErrorDTO> methodArgumentNotValidation(
+            MethodArgumentNotValidException e,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = UNPROCESSABLE_ENTITY;
+        ValidationErrorDTO err = new ValidationErrorDTO(
+                now(),
+                status.value(),
+                "Dados inválidos",
+                request.getRequestURI(),
+                new ArrayList<>()
+        );
         for (FieldError f : e.getBindingResult().getFieldErrors()) {
-            err.addError(f.getField(), f.getDefaultMessage());
+            err.errors().add(
+                    new FieldMessageDTO(
+                            f.getField(),
+                            f.getDefaultMessage()
+                    )
+            );
         }
         return ResponseEntity.status(status).body(err);
     }
