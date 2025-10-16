@@ -22,7 +22,9 @@ import com.devsuperior.dsmovie.dto.MovieDTO;
 import com.devsuperior.dsmovie.services.impl.MovieServiceImpl;
 
 import jakarta.validation.Valid;
+import org.springframework.web.util.HtmlUtils;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.ok;
@@ -52,21 +54,21 @@ public class MovieController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<MovieDTO> insert(@Valid @RequestBody MovieDTO dto) {
-       movieService.insert(dto);
+        MovieDTO saved = movieService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(dto.id())
+                .buildAndExpand(saved.id())
                 .toUri();
-        return created(uri).body(dto);
+        return created(uri).body(sanitize(saved));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping(value = "/{id}")
+    @PutMapping(value="/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<MovieDTO> update(@PathVariable Long id, @Valid @RequestBody MovieDTO dto) {
-        movieService.update(id, dto);
-        return ok().body(dto);
+        MovieDTO saved = movieService.update(id, dto);
+        return ok().body(sanitize(saved));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -74,5 +76,19 @@ public class MovieController {
     public ResponseEntity<MovieDTO> delete(@PathVariable Long id) {
         movieService.delete(id);
         return noContent().build();
+    }
+
+    private static MovieDTO sanitize(MovieDTO d) {
+        return new MovieDTO(
+                d.id(),
+                esc(d.title()),
+                d.score(),
+                d.count(),
+                esc(d.image())
+        );
+    }
+
+    private static String esc(String s) {
+        return (s == null) ? null : HtmlUtils.htmlEscape(s);
     }
 }
