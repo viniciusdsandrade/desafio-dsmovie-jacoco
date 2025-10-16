@@ -1,4 +1,4 @@
-package com.devsuperior.dsmovie.controllers.handlers;
+package com.devsuperior.dsmovie.handlers;
 
 import java.util.ArrayList;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.devsuperior.dsmovie.dto.CustomErrorDTO;
 import com.devsuperior.dsmovie.dto.ValidationErrorDTO;
-import com.devsuperior.dsmovie.services.exceptions.DatabaseException;
-import com.devsuperior.dsmovie.services.exceptions.ResourceNotFoundException;
+import com.devsuperior.dsmovie.exceptions.DatabaseException;
+import com.devsuperior.dsmovie.exceptions.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 

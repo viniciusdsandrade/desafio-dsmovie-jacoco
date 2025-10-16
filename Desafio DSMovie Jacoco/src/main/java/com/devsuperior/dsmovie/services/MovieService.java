@@ -1,75 +1,23 @@
 package com.devsuperior.dsmovie.services;
 
-import org.springframework.dao.DataIntegrityViolationException;
+import com.devsuperior.dsmovie.dto.MovieDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.devsuperior.dsmovie.dto.MovieDTO;
-import com.devsuperior.dsmovie.entities.MovieEntity;
-import com.devsuperior.dsmovie.repositories.MovieRepository;
-import com.devsuperior.dsmovie.services.exceptions.DatabaseException;
-import com.devsuperior.dsmovie.services.exceptions.ResourceNotFoundException;
-
-import jakarta.persistence.EntityNotFoundException;
-
-@Service
-public class MovieService {
-
-	private final MovieRepository repository;
-
-    public MovieService(MovieRepository repository) {
-        this.repository = repository;
-    }
+public interface MovieService {
+    @Transactional(readOnly = true)
+    Page<MovieDTO> findAll(String title, Pageable pageable);
 
     @Transactional(readOnly = true)
-	public Page<MovieDTO> findAll(String title, Pageable pageable) {
-		Page<MovieEntity> result = repository.searchByTitle(title, pageable);
-		return result.map(MovieDTO::new);
-	}
+    MovieDTO findById(Long id);
 
-	@Transactional(readOnly = true)
-	public MovieDTO findById(Long id) {
-		MovieEntity result = repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
-		return new MovieDTO(result);
-	}
+    @Transactional
+    MovieDTO insert(MovieDTO dto);
 
-	@Transactional
-	public MovieDTO insert(MovieDTO dto) {
-		MovieEntity entity = new MovieEntity();
-		copyDtoToEntity(dto, entity);
-		repository.save(entity);
-		return new MovieDTO(entity);
-	}
+    @Transactional
+    MovieDTO update(Long id, MovieDTO dto);
 
-	@Transactional
-	public MovieDTO update(Long id, MovieDTO dto) {
-		try {
-			MovieEntity entity = repository.getReferenceById(id);
-			copyDtoToEntity(dto, entity);
-			repository.save(entity);
-			return new MovieDTO(entity);
-		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Recurso não encontrado");
-		}
-	}
-
-	public void delete(Long id) {
-		if (!repository.existsById(id))
-			throw new ResourceNotFoundException("Recurso não encontrado");
-		try {
-			repository.deleteById(id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException("Falha de integridade referencial");
-		}
-	}
-
-	private void copyDtoToEntity(MovieDTO dto, MovieEntity entity) {
-		entity.setTitle(dto.title());
-		entity.setScore(dto.score());
-		entity.setCount(dto.count());
-		entity.setImage(dto.image());
-	}
+    @Transactional
+    void delete(Long id);
 }

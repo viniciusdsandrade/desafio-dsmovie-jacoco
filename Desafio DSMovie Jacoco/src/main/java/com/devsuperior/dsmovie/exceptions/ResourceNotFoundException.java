@@ -1,4 +1,4 @@
-package com.devsuperior.dsmovie.services.exceptions;
+package com.devsuperior.dsmovie.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String msg) {
