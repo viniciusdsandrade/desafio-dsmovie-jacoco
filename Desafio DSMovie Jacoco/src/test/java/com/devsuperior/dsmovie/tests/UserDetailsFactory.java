@@ -1,70 +1,48 @@
 package com.devsuperior.dsmovie.tests;
 
+import com.devsuperior.dsmovie.projections.UserDetailsProjection;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.devsuperior.dsmovie.projections.UserDetailsProjection;
-
+/** ÚNICA versão desta fábrica. Não duplique este arquivo. */
 public class UserDetailsFactory {
-	
-	public static List<UserDetailsProjection> createCustomClientUser(String username) {
-		
-		List<UserDetailsProjection> list = new ArrayList<>();
-		list.add(new UserDetailsImpl(username, "123", 1L, "ROLE_CLIENT"));
-		return list;
-	}
-	
-	public static List<UserDetailsProjection> createCustomAdminUser(String username) {
-		
-		List<UserDetailsProjection> list = new ArrayList<>();
-		list.add(new UserDetailsImpl(username, "123", 2L, "ROLE_ADMIN"));
-		return list;
-	}
-	
-	public static List<UserDetailsProjection> createCustomAdminClientUser(String username) {
-		
-		List<UserDetailsProjection> list = new ArrayList<>();
-		list.add(new UserDetailsImpl(username, "123", 1L, "ROLE_CLIENT"));
-		list.add(new UserDetailsImpl(username, "123", 2L, "ROLE_ADMIN"));
-		return list;
-	}
 
-}
+    public static List<UserDetailsProjection> createCustomClientUser(String username) {
+        List<UserDetailsProjection> list = new ArrayList<>();
+        list.add(new UserDetailsImpl(username, "123", 1L, "ROLE_CLIENT"));
+        return list;
+    }
 
-class UserDetailsImpl implements UserDetailsProjection {
-	
-	private String username;
-	private String password;
-	private Long roleId;
-	private String authority;
-	
-	public UserDetailsImpl() {
-	}
+    public static List<UserDetailsProjection> createCustomAdminUser(String username) {
+        List<UserDetailsProjection> list = new ArrayList<>();
+        list.add(new UserDetailsImpl(username, "123", 2L, "ROLE_ADMIN"));
+        return list;
+    }
 
-	public UserDetailsImpl(String username, String password, Long roleId, String authority) {
-		this.username = username;
-		this.password = password;
-		this.roleId = roleId;
-		this.authority = authority;
-	}
+    public static List<UserDetailsProjection> createCustomAdminClientUser(String username) {
+        List<UserDetailsProjection> list = new ArrayList<>();
+        list.add(new UserDetailsImpl(username, "123", 1L, "ROLE_CLIENT"));
+        list.add(new UserDetailsImpl(username, "123", 2L, "ROLE_ADMIN"));
+        return list;
+    }
 
-	@Override
-	public String getUsername() {
-		return username;
-	}
+    private static final class UserDetailsImpl implements UserDetailsProjection {
+        private final String username;
+        private final String password;
+        private final Long roleId;
+        private final String authority;
 
-	@Override
-	public String getPassword() {
-		return password;
-	}
+        private UserDetailsImpl(String username, String password, Long roleId, String authority) {
+            this.username = username;
+            this.password = password;
+            this.roleId = roleId;
+            this.authority = authority;
+        }
 
-	@Override
-	public Long getRoleId() {
-		return roleId;
-	}
-
-	@Override
-	public String getAuthority() {
-		return authority;
-	}	
+        @Override public String getUsername() { return username; }
+        @Override public String getPassword() { return password; }
+        @Override public Long getRoleId() { return roleId; }
+        @Override public String getAuthority() { return authority; }
+    }
 }
