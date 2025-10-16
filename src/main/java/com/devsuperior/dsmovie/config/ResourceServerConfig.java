@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,7 +27,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity()
 public class ResourceServerConfig {
 
     @Value("${cors.origins}")
@@ -48,8 +49,20 @@ public class ResourceServerConfig {
     SecurityFilterChain rsSecurityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll());
-        http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
+
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, "/movies/**").permitAll() // leitura pública
+                .requestMatchers("/movies/**").authenticated()             // POST/PUT/DELETE exigem login
+                .requestMatchers("/scores/**").authenticated()             // salvar score exige login (CLIENT ou ADMIN)
+                .anyRequest().permitAll()
+        );
+
+        http.oauth2ResourceServer(oauth ->
+                oauth.jwt(jwt -> jwt
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter()) // usar claim "authorities"
+                )
+        );
+
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         return http.build();
     }

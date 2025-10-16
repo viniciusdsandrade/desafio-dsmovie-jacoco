@@ -26,7 +26,7 @@ public class ScoreController {
         this.scoreService = scoreService;
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PutMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<MovieDTO> saveScore(@Valid @RequestBody ScoreDTO dto) {
         MovieDTO movieDTO = scoreService.saveScore(dto);

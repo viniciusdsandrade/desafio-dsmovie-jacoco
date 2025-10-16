@@ -53,7 +53,7 @@ public class MovieController {
         return movieService.findById(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<MovieDTO> insert(@Valid @RequestBody MovieDTO dto) {
         MovieDTO saved = movieService.insert(dto);
@@ -64,14 +64,14 @@ public class MovieController {
         return created(uri).body(sanitize(saved));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value="/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<MovieDTO> update(@PathVariable Long id, @Valid @RequestBody MovieDTO dto) {
         MovieDTO saved = movieService.update(id, dto);
         return ok().body(sanitize(saved));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<MovieDTO> delete(@PathVariable Long id) {
         movieService.delete(id);
