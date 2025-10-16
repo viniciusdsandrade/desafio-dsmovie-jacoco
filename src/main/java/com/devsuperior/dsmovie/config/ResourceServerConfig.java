@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -51,15 +50,17 @@ public class ResourceServerConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/movies/**").permitAll() // leitura pública
-                .requestMatchers("/movies/**").authenticated()             // POST/PUT/DELETE exigem login
-                .requestMatchers("/scores/**").authenticated()             // salvar score exige login (CLIENT ou ADMIN)
+                .requestMatchers(HttpMethod.GET, "/movies/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/movies/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/movies/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/movies/**").hasRole("ADMIN")
+                .requestMatchers("/scores/**").hasAnyRole("CLIENT", "ADMIN")
                 .anyRequest().permitAll()
         );
 
         http.oauth2ResourceServer(oauth ->
                 oauth.jwt(jwt -> jwt
-                        .jwtAuthenticationConverter(jwtAuthenticationConverter()) // usar claim "authorities"
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter())
                 )
         );
 
