@@ -1,12 +1,15 @@
 package com.devsuperior.dsmovie.entities;
 
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
 @Entity
 @Table(name = "tb_score")
 public class ScoreEntity {
@@ -16,10 +19,7 @@ public class ScoreEntity {
 	
 	@Column(name = "score_value")
 	private Double value;
-	
-	public ScoreEntity() {
-	}
-	
+
 	public void setMovie(MovieEntity movie) {
 		id.setMovie(movie);
 	}
@@ -42,22 +42,5 @@ public class ScoreEntity {
 
 	public void setValue(Double value) {
 		this.value = value;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ScoreEntity other = (ScoreEntity) obj;
-		return Objects.equals(id, other.id);
 	}
 }

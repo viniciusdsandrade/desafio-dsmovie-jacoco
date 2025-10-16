@@ -4,26 +4,33 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
-@SuppressWarnings("serial")
+import static jakarta.persistence.GenerationType.IDENTITY;
+
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_user")
 public class UserEntity implements UserDetails {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	private String name;
 
@@ -32,11 +39,13 @@ public class UserEntity implements UserDetails {
 	private String password;
 
 	@ManyToMany
-	@JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<RoleEntity> roles = new HashSet<>();
-
-	public UserEntity() {
-	}
+	@JoinTable(
+            name = "tb_user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+	@Setter(AccessLevel.NONE)
+    private Set<RoleEntity> roles = new HashSet<>();
 
 	public UserEntity(Long id, String name, String username, String password) {
 		this.id = id;
@@ -45,43 +54,17 @@ public class UserEntity implements UserDetails {
 		this.password = password;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	@Override
 	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
 	@Override
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Set<RoleEntity> getRoles() {
-		return roles;
-	}
 
     public void addRole(RoleEntity role) {
     	roles.add(role);
