@@ -1,6 +1,5 @@
 package com.devsuperior.dsmovie.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +17,16 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class MovieService {
 
-	@Autowired
-	private MovieRepository repository;
+	private final MovieRepository repository;
 
-	@Transactional(readOnly = true)
+    public MovieService(MovieRepository repository) {
+        this.repository = repository;
+    }
+
+    @Transactional(readOnly = true)
 	public Page<MovieDTO> findAll(String title, Pageable pageable) {
 		Page<MovieEntity> result = repository.searchByTitle(title, pageable);
-		return result.map(x -> new MovieDTO(x));
+		return result.map(MovieDTO::new);
 	}
 
 	@Transactional(readOnly = true)
@@ -38,7 +40,7 @@ public class MovieService {
 	public MovieDTO insert(MovieDTO dto) {
 		MovieEntity entity = new MovieEntity();
 		copyDtoToEntity(dto, entity);
-		entity = repository.save(entity);
+		repository.save(entity);
 		return new MovieDTO(entity);
 	}
 
@@ -47,7 +49,7 @@ public class MovieService {
 		try {
 			MovieEntity entity = repository.getReferenceById(id);
 			copyDtoToEntity(dto, entity);
-			entity = repository.save(entity);
+			repository.save(entity);
 			return new MovieDTO(entity);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Recurso não encontrado");
@@ -65,9 +67,9 @@ public class MovieService {
 	}
 
 	private void copyDtoToEntity(MovieDTO dto, MovieEntity entity) {
-		entity.setTitle(dto.getTitle());
-		entity.setScore(dto.getScore());
-		entity.setCount(dto.getCount());
-		entity.setImage(dto.getImage());
+		entity.setTitle(dto.title());
+		entity.setScore(dto.score());
+		entity.setCount(dto.count());
+		entity.setImage(dto.image());
 	}
 }

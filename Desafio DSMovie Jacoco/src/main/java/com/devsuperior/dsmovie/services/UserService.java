@@ -2,7 +2,6 @@ package com.devsuperior.dsmovie.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,11 +16,13 @@ import com.devsuperior.dsmovie.utils.CustomUserUtil;
 @Service
 public class UserService implements UserDetailsService {
 
-	@Autowired
-	private UserRepository repository;
-	
-	@Autowired
-	private CustomUserUtil userUtil;
+	private final UserRepository repository;
+	private final CustomUserUtil userUtil;
+
+    public UserService(UserRepository repository, CustomUserUtil userUtil) {
+        this.repository = repository;
+        this.userUtil = userUtil;
+    }
 
 	public UserEntity authenticated() {
 		try {
@@ -37,13 +38,13 @@ public class UserService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		List<UserDetailsProjection> result = repository.searchUserAndRolesByUsername(username);
-		if (result.size() == 0) {
+		if (result.isEmpty()) {
 			throw new UsernameNotFoundException("Email not found");
 		}
 		
 		UserEntity user = new UserEntity();
-		user.setUsername(result.get(0).getUsername());
-		user.setPassword(result.get(0).getPassword());
+		user.setUsername(result.getFirst().getUsername());
+		user.setPassword(result.getFirst().getPassword());
 		for (UserDetailsProjection projection : result) {
 			user.addRole(new RoleEntity(projection.getRoleId(), projection.getAuthority()));
 		}

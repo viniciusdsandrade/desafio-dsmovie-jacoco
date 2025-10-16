@@ -2,7 +2,6 @@ package com.devsuperior.dsmovie.controllers;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,44 +22,56 @@ import com.devsuperior.dsmovie.services.MovieService;
 
 import jakarta.validation.Valid;
 
+import static org.springframework.http.ResponseEntity.noContent;
+import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.ok;
+
+
 @RestController
 @RequestMapping(value = "/movies")
 public class MovieController {
 
-	@Autowired
-	private MovieService service;
+    private final MovieService service;
 
-	@GetMapping
-	public Page<MovieDTO> findAll(
-			@RequestParam(value="title", defaultValue = "") String title, 
-			Pageable pageable) {
-		return service.findAll(title, pageable);
-	}
+    public MovieController(MovieService service) {
+        this.service = service;
+    }
 
-	@GetMapping(value = "/{id}")
-	public MovieDTO findById(@PathVariable Long id) {
-		return service.findById(id);
-	}
+    @GetMapping
+    public Page<MovieDTO> findAll(
+            @RequestParam(value = "title", defaultValue = "") String title,
+            Pageable pageable
+    ) {
+        return service.findAll(title, pageable);
+    }
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@PostMapping
-	public ResponseEntity<MovieDTO> insert(@Valid @RequestBody MovieDTO dto) {
-		dto = service.insert(dto);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
-		return ResponseEntity.created(uri).body(dto);
-	}
+    @GetMapping(value = "/{id}")
+    public MovieDTO findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<MovieDTO> update(@PathVariable Long id, @Valid @RequestBody MovieDTO dto) {
-		dto = service.update(id, dto);
-		return ResponseEntity.ok().body(dto);
-	}
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping
+    public ResponseEntity<MovieDTO> insert(@Valid @RequestBody MovieDTO dto) {
+       service.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(dto.id())
+                .toUri();
+        return created(uri).body(dto);
+    }
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<MovieDTO> delete(@PathVariable Long id) {
-		service.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<MovieDTO> update(@PathVariable Long id, @Valid @RequestBody MovieDTO dto) {
+        service.update(id, dto);
+        return ok().body(dto);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<MovieDTO> delete(@PathVariable Long id) {
+        service.delete(id);
+        return noContent().build();
+    }
 }
