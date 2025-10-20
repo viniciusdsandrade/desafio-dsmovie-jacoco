@@ -1,0 +1,12 @@
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/DsmovieApplicationTests.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/controller/MovieControllerRATests.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/controller/ScoreControllerRATests.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/services/MovieServiceImplTests.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/services/ScoreServiceImplTests.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/services/UserServiceTests.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/tests/MovieFactory.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/tests/ScoreFactory.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/tests/TokenUtil.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/tests/TokenUtil2.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/tests/UserDetailsFactory.java
+/home/andrade/Desktop/desafio-dsmovie-jacoco/src/test/java/com/devsuperior/dsmovie/tests/UserFactory.java
