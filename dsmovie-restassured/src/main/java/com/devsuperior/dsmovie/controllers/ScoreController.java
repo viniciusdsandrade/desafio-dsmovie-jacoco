@@ -4,6 +4,7 @@ import com.devsuperior.dsmovie.dto.MovieDTO;
 import com.devsuperior.dsmovie.dto.ScoreDTO;
 import com.devsuperior.dsmovie.services.ScoreService;
 import com.devsuperior.dsmovie.services.impl.ScoreServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +24,9 @@ public class ScoreController {
         this.scoreService = scoreService;
     }
 
-    @PutMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<MovieDTO> saveScore(@RequestBody ScoreDTO dto) {
-        MovieDTO movieDTO = scoreService.saveScore(dto);
-        return ok(movieDTO);
+    @PutMapping
+    public ResponseEntity<MovieDTO> saveScore(@Valid @RequestBody ScoreDTO scoreDTO) {
+        MovieDTO out = scoreService.saveScore(scoreDTO);
+        return ok(out);
     }
 }

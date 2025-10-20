@@ -35,13 +35,13 @@ public class ScoreServiceImpl implements ScoreService {
     public MovieDTO saveScore(ScoreDTO dto) {
         UserEntity user = userService.authenticated();
 
-        MovieEntity movie = movieRepository.findById(dto.getMovieId())
-                .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+        MovieEntity movie = movieRepository.findById(dto.movieId())
+                .orElseThrow(() -> new ResourceNotFoundException("Id não encontrado " + dto.movieId()));
 
         ScoreEntity score = new ScoreEntity();
         score.setMovie(movie);
         score.setUser(user);
-        score.setValue(dto.getScore());
+        score.setValue(dto.score());
 
         scoreRepository.saveAndFlush(score);
 
