@@ -6,14 +6,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = {
-        "com.devsuperior.dsmovie.restassured.repositories",
-        "com.devsuperior.dsmovie.repositories"       // inclua se os repos estiverem neste pacote
-})
-@EntityScan(basePackages = {
-        "com.devsuperior.dsmovie.restassured.entities",
-        "com.devsuperior.dsmovie.entities"           // inclua se as entidades estiverem aqui
-})
+@EnableJpaRepositories(basePackages = "com.devsuperior.dsmovie.restassured.repositories")
+@EntityScan(basePackages = "com.devsuperior.dsmovie.restassured.entities")
 public class PocDsmovieRestassuredApplication {
     public static void main(String[] args) {
         SpringApplication.run(PocDsmovieRestassuredApplication.class, args);
