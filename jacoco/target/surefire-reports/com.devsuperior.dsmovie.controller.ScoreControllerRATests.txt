@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.devsuperior.dsmovie.controller.ScoreControllerRATests
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.620 s -- in com.devsuperior.dsmovie.controller.ScoreControllerRATests
