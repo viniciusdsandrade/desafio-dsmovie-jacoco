@@ -1,9 +1,9 @@
-package com.devsuperior.dsmovie.config.customgrant;
+package com.devsuperior.dsmovie.restassured.config.customgrant;
+
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.List;
-
-import org.springframework.security.core.GrantedAuthority;
 
 public record CustomUserAuthorities(
         String username,

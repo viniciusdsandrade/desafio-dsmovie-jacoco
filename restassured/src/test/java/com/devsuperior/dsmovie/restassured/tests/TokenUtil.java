@@ -1,4 +1,4 @@
-package com.devsuperior.dsmovie.tests;
+package com.devsuperior.dsmovie.restassured.tests;
 
 import static io.restassured.RestAssured.given;
 

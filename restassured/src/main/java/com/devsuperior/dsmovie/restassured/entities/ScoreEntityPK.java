@@ -1,4 +1,4 @@
-package com.devsuperior.dsmovie.entities;
+package com.devsuperior.dsmovie.restassured.entities;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;

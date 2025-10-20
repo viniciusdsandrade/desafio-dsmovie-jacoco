@@ -1,9 +1,9 @@
-package com.devsuperior.dsmovie;
+package com.devsuperior.dsmovie.restassured;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest()
 class PocDsmovieRestassuredApplicationTests {
 
 	@Test
